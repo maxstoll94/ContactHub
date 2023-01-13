@@ -1,0 +1,99 @@
+﻿@using System.ComponentModel.DataAnnotations;
+@using Contacter.Application.Commands.CreateContact;
+@inject ISender _sender;
+
+<div class="bg-white rounded shadow-sm py-5 px-3 text-center">
+    <Button Clicked="@ShowModal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path>
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
+        </svg>
+    </Button>
+</div>
+
+<Modal @bind-Visible="@modalVisible">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Employee edit</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <EditForm Model="@createRequest" OnValidSubmit="@HandleValidSubmit" class="form">
+            <DataAnnotationsValidator />
+            <ModalBody>
+                <Validations Mode="ValidationMode.Manual" Model="@createRequest">
+                    <Validation>
+                        <FieldLabel>First Name</FieldLabel>
+                        <FieldBody>
+                            <TextEdit Placeholder="John" @bind-Text="@createRequest.FirstName">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </FieldBody>
+                    </Validation>
+                    <Validation>
+                        <FieldLabel>Last Name</FieldLabel>
+                        <FieldBody>
+                            <TextEdit Placeholder="Doe" @bind-Text="@createRequest.LastName">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </FieldBody>
+                    </Validation>
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
+                <Button Type="ButtonType.Submit" Color="Color.Primary">Save Changes</Button>
+            </ModalFooter>
+        </EditForm>
+    </ModalContent>
+</Modal>
+
+@code {
+    private CreateContactRequest createRequest { get; set; } = new CreateContactRequest();
+
+    private bool modalVisible;
+
+    [Parameter]
+    public EventCallback FetchContactsCallback { get; set; }
+
+    private async void HandleValidSubmit()
+    {
+        var command = new CreateContactCommand(createRequest.FirstName!, createRequest.LastName!, null);
+        await _sender.Send(command);
+
+        await FetchContactsCallback.InvokeAsync();
+        await HideModal();
+    }
+
+    private void ResetModal()
+    {
+        createRequest = new CreateContactRequest();
+    }
+
+    private Task ShowModal()
+    {
+        modalVisible = true;
+        return Task.CompletedTask;
+    }
+
+    private Task HideModal()
+    {
+        modalVisible = false;
+        ResetModal();
+        return Task.CompletedTask;
+    }
+
+    public class CreateContactRequest
+    {
+        [Required]
+        [StringLength(20)]
+        public string? FirstName { get; set; }
+
+        [Required]
+        [StringLength(20)]
+        public string? LastName { get; set; }
+    }
+}

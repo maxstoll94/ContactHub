@@ -1,0 +1,41 @@
+﻿@using Contacter.Application.Queries;
+@using Contacter.Application.Queries.GetContacts;
+@using Contacter.Domain.ValueObjects;
+
+@inject ISender _sender;
+
+<div class="row">
+    <div class="col-md-2 mt-4">
+        <CreateContact FetchContactsCallback="@FetchContacts"/>
+    </div>
+
+    @foreach (var contact in Contacts)
+    {
+        <div class="col-md-2 mt-4">
+            <ContactCard Contact=@contact FetchContactsCallback="@FetchContacts" />
+        </div>
+    }
+</div>
+
+@code {
+    [CascadingParameter]
+    public MainLayout? Layout { get; set; }
+
+    private IEnumerable<ContactResponse> Contacts = Array.Empty<ContactResponse>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchContacts();
+    }
+
+    private async Task FetchContacts()
+    {
+        var query = new GetContactsQuery(Layout?.SearchParameter);
+        Contacts = await _sender.Send(query);
+    }
+
+    protected override async void OnParametersSet()
+    {
+        await FetchContacts();
+    }
+}
