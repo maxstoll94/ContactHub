@@ -2,11 +2,11 @@
 
 namespace Contacter.Domain.Exceptions
 {
-    public class ContractorException : Exception
+    public class ContactorException : Exception
     {
         public CustomError Error { get; private set; }
 
-        public ContractorException(string code, string message, string target) 
+        public ContactorException(string code, string message, string target) 
         {
             Error = new CustomError(code, message, target);
         }

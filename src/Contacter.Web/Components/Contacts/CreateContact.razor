@@ -1,5 +1,6 @@
 ﻿@using System.ComponentModel.DataAnnotations;
 @using Contacter.Application.Commands.CreateContact;
+@using Contacter.Domain.Exceptions;
 @inject ISender _sender;
 
 <div class="bg-white rounded shadow-sm py-5 px-3 text-center">
@@ -14,35 +15,27 @@
 <Modal @bind-Visible="@modalVisible">
     <ModalContent Centered>
         <ModalHeader>
-            <ModalTitle>Employee edit</ModalTitle>
+            <ModalTitle>Contact create</ModalTitle>
             <CloseButton />
         </ModalHeader>
         <EditForm Model="@createRequest" OnValidSubmit="@HandleValidSubmit" class="form">
-            <DataAnnotationsValidator />
             <ModalBody>
-                <Validations Mode="ValidationMode.Manual" Model="@createRequest">
-                    <Validation>
-                        <FieldLabel>First Name</FieldLabel>
-                        <FieldBody>
-                            <TextEdit Placeholder="John" @bind-Text="@createRequest.FirstName">
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                            </TextEdit>
-                        </FieldBody>
-                    </Validation>
-                    <Validation>
-                        <FieldLabel>Last Name</FieldLabel>
-                        <FieldBody>
-                            <TextEdit Placeholder="Doe" @bind-Text="@createRequest.LastName">
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                            </TextEdit>
-                        </FieldBody>
-                    </Validation>
-                </Validations>
+                <Alert @ref="errorAlert" Color="Color.Danger">
+                    @alertMessage
+                </Alert>
+                <DataAnnotationsValidator />
+                <div class="form-group">
+                    <label>First Name</label>
+                    <InputText @bind-Value=createRequest.FirstName class="form-control" />
+                    <ValidationMessage For="() => createRequest.FirstName" />
+                </div>
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <InputText @bind-Value=createRequest.LastName class="form-control" />
+                    <ValidationMessage For=@(() => createRequest.LastName) />
+                </div>
             </ModalBody>
+
             <ModalFooter>
                 <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
                 <Button Type="ButtonType.Submit" Color="Color.Primary">Save Changes</Button>
@@ -56,16 +49,40 @@
 
     private bool modalVisible;
 
+    private Alert? errorAlert;
+    private string? alertMessage;
+
     [Parameter]
     public EventCallback FetchContactsCallback { get; set; }
 
     private async void HandleValidSubmit()
     {
-        var command = new CreateContactCommand(createRequest.FirstName!, createRequest.LastName!, null);
-        await _sender.Send(command);
+        try
+        {
+            var command = new CreateContactCommand(createRequest.FirstName!, createRequest.LastName!, null);
+            await _sender.Send(command);
 
-        await FetchContactsCallback.InvokeAsync();
-        await HideModal();
+            await FetchContactsCallback.InvokeAsync();
+            await HideModal();
+            StateHasChanged();
+        }
+        catch (ContactorException ex)
+        {
+            if (errorAlert != null)
+            {
+                alertMessage = ex.Error.Message;
+                await errorAlert.Show();
+            }
+        }
+        catch (Exception)
+        {
+            if (errorAlert != null)
+            {
+                alertMessage = "An unexpected error has occured. Please try again!";
+                await errorAlert.Show();
+            }
+        }
+  
     }
 
     private void ResetModal()
@@ -82,18 +99,17 @@
     private Task HideModal()
     {
         modalVisible = false;
-        ResetModal();
         return Task.CompletedTask;
     }
 
     public class CreateContactRequest
     {
         [Required]
-        [StringLength(20)]
+        [StringLength(50)]
         public string? FirstName { get; set; }
 
         [Required]
-        [StringLength(20)]
+        [StringLength(50)]
         public string? LastName { get; set; }
     }
 }

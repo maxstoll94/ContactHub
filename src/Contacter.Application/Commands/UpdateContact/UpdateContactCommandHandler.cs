@@ -37,7 +37,7 @@ internal sealed class UpdateContactCommandHandler : ICommandHandler<UpdateContac
 
         if (contact == null)
         {
-            throw new ContractorException("ContactNotFound", $"A contact with the identifier {request.ContactId} does not exist", nameof(request.ContactId));
+            throw new ContactorException("ContactNotFound", $"A contact with the identifier {request.ContactId} does not exist", nameof(request.ContactId));
         }
 
         contact.UpdateContactName(request.Name);

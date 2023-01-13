@@ -8,7 +8,7 @@ namespace Contacter.Domain.SeedWork
 {
     public abstract class ValueObject
     {
-        protected abstract IEnumerable<object?> GetEqualityComponents();
+        protected abstract IEnumerable<object?> GetProperties();
 
         public override bool Equals(object? obj)
         {
@@ -19,12 +19,12 @@ namespace Contacter.Domain.SeedWork
 
             var other = (ValueObject)obj;
 
-            return this.GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
+            return this.GetProperties().SequenceEqual(other.GetProperties());
         }
 
         public override int GetHashCode()
         {
-            return GetEqualityComponents()
+            return GetProperties()
             .Select(x => x != null ? x.GetHashCode() : 0)
             .Aggregate((x, y) => x ^ y);
         }
