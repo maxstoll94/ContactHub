@@ -1,10 +1,10 @@
-﻿namespace Contacter.Domain.Primitives
+﻿namespace ContactHub.Domain.SeedWork
 {
     public abstract class AggregateRoot : Entity
     {
         private readonly List<IDomainEvent> _domainEvents = new();
 
-        protected AggregateRoot(Guid id) : base(id) {}
+        protected AggregateRoot(Guid id) : base(id) { }
 
         /// <summary>
         /// Get all domain events associated with this entity

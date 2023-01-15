@@ -1,8 +1,8 @@
-﻿using Contacter.Domain.Events;
-using Contacter.Domain.Primitives;
-using Contacter.Domain.ValueObjects;
+﻿using ContactHub.Domain.Events;
+using ContactHub.Domain.SeedWork;
+using ContactHub.Domain.ValueObjects;
 
-namespace Contacter.Domain.Entities
+namespace ContactHub.Domain.Entities
 {
     public class Company : AggregateRoot
     {

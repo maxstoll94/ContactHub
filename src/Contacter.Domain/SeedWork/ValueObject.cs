@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Contacter.Domain.SeedWork
+namespace ContactHub.Domain.SeedWork
 {
     public abstract class ValueObject
     {
@@ -19,7 +19,7 @@ namespace Contacter.Domain.SeedWork
 
             var other = (ValueObject)obj;
 
-            return this.GetProperties().SequenceEqual(other.GetProperties());
+            return GetProperties().SequenceEqual(other.GetProperties());
         }
 
         public override int GetHashCode()

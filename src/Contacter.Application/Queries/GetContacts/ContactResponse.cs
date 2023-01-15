@@ -1,8 +1,8 @@
-﻿using Contacter.Application.Queries.GetCompanies;
-using Contacter.Domain.Entities;
-using Contacter.Domain.ValueObjects;
+﻿using ContactHub.Application.Queries.GetCompanies;
+using ContactHub.Domain.Entities;
+using ContactHub.Domain.ValueObjects;
 
-namespace Contacter.Application.Queries.GetContacts
+namespace ContactHub.Application.Queries.GetContacts
 {
     public class ContactResponse
     {

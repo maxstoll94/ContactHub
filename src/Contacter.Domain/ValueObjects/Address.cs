@@ -1,7 +1,7 @@
-﻿using Contacter.Domain.Exceptions;
-using Contacter.Domain.SeedWork;
+﻿using ContactHub.Domain.ErrorHandling;
+using ContactHub.Domain.SeedWork;
 
-namespace Contacter.Domain.ValueObjects
+namespace ContactHub.Domain.ValueObjects
 {
     public class Address : ValueObject
     {
@@ -40,7 +40,7 @@ namespace Contacter.Domain.ValueObjects
             Country = country;
         }
 
-        public Address() {}
+        public Address() { }
 
         protected override IEnumerable<object?> GetProperties()
         {

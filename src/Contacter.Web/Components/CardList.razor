@@ -1,0 +1,90 @@
+﻿@using ContactHub.Application.Queries.GetCompanies;
+@using ContactHub.Web.Components.Company
+@using ContactHub.Web.Components.Contact
+@inject ISender _sender;
+
+<div class="row">
+    <div class="col-md-2 mt-4">
+        <CreateCard FetchContactsCallback="@FetchContacts" FetchCompaniesCallback="@FetchCompanies" CompanySelectList="Companies" />
+    </div>
+
+    @if (Layout != null)
+    {
+        @switch (Layout.CardType)
+        {
+            case MainLayout.CardTypeEnum.Contacts:
+
+                @foreach (var contact in Contacts)
+                {
+                    <div class="col-md-2 mt-4">
+                        <ContactCard Contact=@contact FetchContactsCallback="@FetchContacts" CompanySelectList="Companies" />
+                    </div>
+                }
+
+                break;
+
+            case MainLayout.CardTypeEnum.Companies:
+
+                @foreach (var company in Companies)
+                {
+                    <div class="col-md-2 mt-4">
+                        <CompanyCard Company=@company />
+                    </div>
+                }
+
+                break;
+
+            default:
+                <p>Card type is not supported</p>
+                break;
+        }
+    }
+</div>
+
+@code {
+    [CascadingParameter]
+    public MainLayout? Layout { get; set; }
+
+    private IEnumerable<ContactResponse> Contacts = Array.Empty<ContactResponse>();
+    private IEnumerable<CompanyResponse> Companies = Array.Empty<CompanyResponse>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchContacts();
+        await FetchCompanies();
+    }
+
+    protected override async void OnParametersSet()
+    {
+        if (Layout != null)
+        {
+            @switch (Layout.CardType)
+            {
+                case MainLayout.CardTypeEnum.Contacts:
+                    await FetchContacts();
+                    break;
+
+                case MainLayout.CardTypeEnum.Companies:
+                    await FetchCompanies();
+                    break;
+
+                default:
+                    throw new Exception("Card Type is not supported");
+            }
+        }
+    }
+
+    private async Task FetchContacts()
+    {
+        var query = new GetContactsQuery(Layout?.SearchParameter);
+        Contacts = await _sender.Send(query);
+    }
+
+    private async Task FetchCompanies()
+    {
+        var query = new GetCompaniesQuery(Layout?.SearchParameter);
+        Companies = await _sender.Send(query);
+    }
+
+
+}

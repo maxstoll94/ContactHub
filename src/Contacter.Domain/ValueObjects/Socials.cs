@@ -1,10 +1,7 @@
-﻿
-using Contacter.Domain.Exceptions;
-using Contacter.Domain.SeedWork;
-using System.Diagnostics.Metrics;
-using System.IO;
+﻿using ContactHub.Domain.ErrorHandling;
+using ContactHub.Domain.SeedWork;
 
-namespace Contacter.Domain.ValueObjects
+namespace ContactHub.Domain.ValueObjects
 {
     public class Socials : ValueObject
     {
@@ -42,7 +39,7 @@ namespace Contacter.Domain.ValueObjects
             LinkedIn = linkedIn;
         }
 
-        public Socials() {}
+        public Socials() { }
 
         protected override IEnumerable<object?> GetProperties()
         {

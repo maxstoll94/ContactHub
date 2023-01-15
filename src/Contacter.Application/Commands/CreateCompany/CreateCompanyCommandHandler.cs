@@ -1,10 +1,10 @@
-﻿using Contacter.Application.Abstractions.Messaging;
-using Contacter.Domain.Entities;
-using Contacter.Domain.Repositories;
-using Contacter.Domain.ValueObjects;
+﻿using ContactHub.Application.Abstractions.Messaging;
+using ContactHub.Domain.Entities;
+using ContactHub.Domain.Repositories;
+using ContactHub.Domain.ValueObjects;
 using MediatR;
 
-namespace Contacter.Application.Commands.CreateCompany;
+namespace ContactHub.Application.Commands.CreateCompany;
 
 public class CreateCompanyCommand : ICommand
 {

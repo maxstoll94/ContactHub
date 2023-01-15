@@ -1,12 +1,12 @@
-﻿using Contacter.Domain.Entities;
-using Contacter.Domain.Repositories;
+﻿using ContactHub.Domain.Entities;
+using ContactHub.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 
-namespace Contacter.Persistence.Repositories
+namespace ContactHub.Persistence.Repositories
 {
     public class CompanyRepository : Repository<Company>, ICompanyRepository
     {
-        public CompanyRepository(ContacterContext context) : base(context) { }
+        public CompanyRepository(ContactHubContext context) : base(context) { }
     }
 }

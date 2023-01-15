@@ -1,8 +1,7 @@
-﻿using Contacter.Application.Abstractions.Messaging;
-using Contacter.Domain.Entities;
-using Contacter.Domain.Repositories;
+﻿using ContactHub.Application.Abstractions.Messaging;
+using ContactHub.Domain.Repositories;
 
-namespace Contacter.Application.Queries.GetContacts
+namespace ContactHub.Application.Queries.GetContacts
 {
     public class GetContactsQuery : IQuery<IEnumerable<ContactResponse>>
     {
@@ -33,6 +32,7 @@ namespace Contacter.Application.Queries.GetContacts
             var contacts = query
                 .OrderBy(c => c.CreatedOn)
                 .Select(c => ContactResponse.FromContact(c))
+                .ToList()
                 .AsEnumerable();
 
             return Task.FromResult(contacts);

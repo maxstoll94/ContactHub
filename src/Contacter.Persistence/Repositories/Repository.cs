@@ -1,14 +1,13 @@
-﻿using Contacter.Domain.Entities;
-using Contacter.Domain.Primitives;
+﻿using ContactHub.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
 
-namespace Contacter.Persistence.Repositories
+namespace ContactHub.Persistence.Repositories
 {
     public abstract class Repository<T> where T : Entity
     {
-        protected ContacterContext Context { get; private set; }
+        protected ContactHubContext Context { get; private set; }
 
-        protected Repository(ContacterContext context)
+        protected Repository(ContactHubContext context)
         {
             Context = context;
         }
