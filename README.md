@@ -1,4 +1,4 @@
-# Contacter
+# ContactHub
 
 Welcome to the Contactor. A simple web application for managing your contacts:
 
