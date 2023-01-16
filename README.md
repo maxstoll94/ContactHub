@@ -1,6 +1,6 @@
-# ContactHub
+# Contact Hub
 
-Welcome to the Contactor. A simple web application for managing your contacts:
+Welcome to the Contact Hub. A simple web application for managing your contacts:
 
 ![image](https://user-images.githubusercontent.com/14106031/212625987-9e46170f-6adc-4c8a-9dff-fabbc6dbb253.png)
 
