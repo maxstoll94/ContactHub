@@ -26,6 +26,6 @@ You can access it via the following URL: https://contacthub-web.azurewebsites.ne
 A test user has been created with the following credentials for you to login:
 
 ```
-username: testuser@maxstoll94.onmicrosoft.com
+username: testuser@maxstoll94yahoo.onmicrosoft.com
 password: ContactHub2023!
 ```
