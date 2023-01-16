@@ -1,12 +1,12 @@
-﻿using Contacter.Domain.Repositories;
+﻿using ContactHub.Domain.Repositories;
 
-namespace Contacter.Persistence
+namespace ContactHub.Persistence
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ContacterContext _context;
+        private readonly ContactHubContext _context;
 
-        public UnitOfWork(ContacterContext context)
+        public UnitOfWork(ContactHubContext context)
         {
             _context = context;
         }

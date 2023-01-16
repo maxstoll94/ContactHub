@@ -1,4 +1,4 @@
-using Contacter.Web.Configuration;
+using ContactHub.Web.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 

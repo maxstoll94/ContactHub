@@ -1,8 +1,8 @@
-﻿using Contacter.Domain.Events;
-using Contacter.Domain.Primitives;
-using Contacter.Domain.ValueObjects;
+﻿using ContactHub.Domain.Events;
+using ContactHub.Domain.SeedWork;
+using ContactHub.Domain.ValueObjects;
 
-namespace Contacter.Domain.Entities
+namespace ContactHub.Domain.Entities
 {
     public class Contact : AggregateRoot
     {
@@ -13,7 +13,7 @@ namespace Contacter.Domain.Entities
         public DateTimeOffset CreatedOn { get; private set; }
         public DateTimeOffset? UpdatedOn { get; private set; }
 
-        #pragma warning disable CS8618
+#pragma warning disable CS8618
         // EF Core Constructor
         private Contact(Guid id) : base(id)
         {
@@ -42,9 +42,17 @@ namespace Contacter.Domain.Entities
             RaiseDomainEvent(new CompanyUpdatedEvent(Id));
         }
 
-        public void ConnectCompany(Guid companyId)
+        public void ConnectCompany(Company company)
         {
-            CompanyId = companyId;
+            Company = company;
+            UpdatedOn = DateTimeOffset.UtcNow;
+            RaiseDomainEvent(new CompanyUpdatedEvent(Id));
+        }
+
+        public void DisconnectCompany()
+        {
+            CompanyId = null;
+            Company = null;
             UpdatedOn = DateTimeOffset.UtcNow;
             RaiseDomainEvent(new CompanyUpdatedEvent(Id));
         }

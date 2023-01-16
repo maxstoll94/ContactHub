@@ -1,8 +1,8 @@
-﻿using Contacter.Domain.Entities;
+﻿using ContactHub.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Gatherly.Persistence.Configurations;
+namespace ContactHub.Persistence.Configurations;
 
 internal sealed class CompanyConfiguration : IEntityTypeConfiguration<Company>
 {

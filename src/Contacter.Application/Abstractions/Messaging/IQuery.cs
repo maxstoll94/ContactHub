@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Contacter.Application.Abstractions.Messaging;
+namespace ContactHub.Application.Abstractions.Messaging;
 
 public interface IQuery<TResponse> : IRequest<TResponse>
 {

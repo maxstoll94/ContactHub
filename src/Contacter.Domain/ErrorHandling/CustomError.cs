@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Contacter.Domain.ErrorHandling
+namespace ContactHub.Domain.ErrorHandling
 {
     public class CustomError
     {

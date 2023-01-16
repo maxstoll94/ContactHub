@@ -1,0 +1,92 @@
+﻿@using ContactHub.Application.Queries.GetCompanies;
+@inject ISender _sender;
+
+<EditForm Model="@createRequest" OnValidSubmit="@HandleValidSubmit" class="form">
+    <Alert @ref="alert" Color="Color.Danger">
+        @message
+    </Alert>
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>First Name</label>
+        <InputText @bind-Value=createRequest.FirstName class="form-control" />
+        <ValidationMessage For="() => createRequest.FirstName" />
+    </div>
+    <div class="form-group">
+        <label>Last Name</label>
+        <InputText @bind-Value=createRequest.LastName class="form-control" />
+        <ValidationMessage For=@(() => createRequest.LastName) />
+    </div>
+    <Divider />
+    <div class="form-group">
+        <label>Company</label>
+        <InputSelect @bind-Value="createRequest.CompanyId" class="form-control">
+            <option>No Company</option>
+            @if (CompanySelectList != null && CompanySelectList.Any())
+            {
+                @foreach (var company in CompanySelectList)
+                {
+                    <option value=@company.Id>@company.Name</option>
+                }
+            } else
+            {
+                <p>No companies created yet</p>
+            } 
+        </InputSelect>
+    </div>
+
+    <Button Type="ButtonType.Submit" Color="Color.Primary">Save Changes</Button>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public EventCallback SubmitCallback { get; set; }
+
+    [Parameter]
+    public IEnumerable<CompanyResponse>? CompanySelectList { get; set; }
+
+    private CreateContactRequest createRequest { get; set; } = new CreateContactRequest();
+    private Alert? alert;
+    private string? message;
+
+    private async void HandleValidSubmit()
+    {
+        try
+        {
+            var command = new CreateContactCommand(createRequest.FirstName!, createRequest.LastName!, createRequest.CompanyId);
+            await _sender.Send(command);
+
+            await SubmitCallback.InvokeAsync();
+        }
+        catch (ContactorException ex)
+        {
+            if (alert != null)
+            {
+                message = ex.Error.Message;
+                await alert.Show();
+            }
+        }
+        catch (Exception)
+        {
+            if (alert != null)
+            {
+                message = "An unexpected error has occured. Please try again!";
+                await alert.Show();
+            }
+        }
+
+    }
+
+    public class CreateContactRequest
+    {
+        [Required]
+        [StringLength(50)]
+        public string? FirstName { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string? LastName { get; set; }
+
+        public Guid? CompanyId { get; set; }
+    }
+}

@@ -1,4 +1,4 @@
-﻿namespace Contacter.Domain.Events
+﻿namespace ContactHub.Domain.Events
 {
     public sealed record ContactUpdatedEvent(Guid ContactId) : DomainEvent();
 }

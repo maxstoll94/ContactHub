@@ -1,0 +1,155 @@
+﻿@using ContactHub.Application.Queries.GetCompanies;
+@inject ISender _sender;
+
+<EditForm Model="@updateRequest" OnValidSubmit="@HandleValidSubmit" class="form">
+    <Alert @ref="alert" Color="Color.Danger">
+        @message
+    </Alert>
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>First Name</label>
+        <InputText @bind-Value=updateRequest.FirstName class="form-control" />
+        <ValidationMessage For="() => updateRequest.FirstName" />
+    </div>
+    <div class="form-group">
+        <label>Last Name</label>
+        <InputText @bind-Value=updateRequest.LastName class="form-control" />
+        <ValidationMessage For=@(() => updateRequest.LastName) />
+    </div>
+    <Divider />
+    <div class="form-group">
+        <label>Company</label>
+        <InputSelect @bind-Value="updateRequest.CompanyId" class="form-control">
+            <option value="">No Company</option>
+            @if (CompanySelectList != null && CompanySelectList.Any())
+            {
+                @foreach (var company in CompanySelectList)
+                {
+                    <option value=@company.Id>@company.Name</option>
+                }
+            }
+            else
+            {
+                <p>No companies created yet</p>
+            }
+        </InputSelect>
+    </div>
+    <Divider />
+    <div class="form-group">
+        <label>Email Address</label>
+        <InputText @bind-Value=updateRequest.Email class="form-control" />
+        <ValidationMessage For=@(() => updateRequest.Email) />
+    </div>
+    <div class="form-group">
+        <label>Link to Twitter page</label>
+        <InputText @bind-Value=updateRequest.Twitter class="form-control" />
+        <ValidationMessage For=@(() => updateRequest.Twitter) />
+    </div>
+    <div class="form-group">
+        <label>Link to Instagram page</label>
+        <InputText @bind-Value=updateRequest.Instagram class="form-control" />
+        <ValidationMessage For=@(() => updateRequest.Instagram) />
+    </div>
+    <div class="form-group">
+        <label>Link to Linked In page</label>
+        <InputText @bind-Value=updateRequest.LinkedIn class="form-control" />
+        <ValidationMessage For=@(() => updateRequest.LinkedIn) />
+    </div>
+    <Button Type="ButtonType.Submit" Color="Color.Primary">Save Changes</Button>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public ContactResponse? Contact { get; set; }
+
+    [Parameter]
+    public EventCallback SubmitCallback { get; set; }
+
+    [Parameter]
+    public IEnumerable<CompanyResponse>? CompanySelectList { get; set; }
+
+    private UpdateContactRequest updateRequest { get; set; } = new UpdateContactRequest();
+    private Alert? alert;
+    private string? message;
+
+    protected override void OnInitialized()
+    {
+        SetRequest();
+    }
+
+    private async void HandleValidSubmit()
+    {
+        if (Contact?.Id != null)
+        {
+            try
+            {
+                var name = new Name(updateRequest.FirstName, updateRequest.LastName);
+                var socials = new Socials(updateRequest.Email, updateRequest.Twitter, updateRequest.Instagram, updateRequest.LinkedIn);
+                var command = new UpdateContactCommand(Contact.Id, name, socials, updateRequest.CompanyId);
+
+                await _sender.Send(command);
+                await SubmitCallback.InvokeAsync();
+            }
+            catch (ContactorException ex)
+            {
+                if (alert != null)
+                {
+                    message = ex.Error.Message;
+                    await alert.Show();
+                }
+            }
+            catch (Exception)
+            {
+                if (alert != null)
+                {
+                    message = "An unexpected error has occured. Please try again!";
+                    await alert.Show();
+                }
+            }
+        }
+    }
+
+    private void SetRequest()
+    {
+        if (Contact != null)
+        {
+            updateRequest = new UpdateContactRequest
+                {
+                    FirstName = Contact.Name.First,
+                    LastName = Contact.Name.Last,
+                    CompanyId = Contact.Company?.Id,
+                    Email = Contact.Socials.EmailAddress,
+                    Twitter = Contact.Socials.Twitter,
+                    Instagram = Contact.Socials.Instagram,
+                    LinkedIn = Contact.Socials.LinkedIn
+                };
+        }
+    }
+
+    public class UpdateContactRequest
+    {
+        [StringLength(50)]
+        [EmailAddress]
+        public string? Email { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(50)]
+        public string FirstName { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(50)]
+        public string LastName { get; set; } = string.Empty;
+
+        [StringLength(50)]
+        public string? Twitter { get; set; } = string.Empty;
+
+        [StringLength(50)]
+        public string? Instagram { get; set; } = string.Empty;
+
+        [StringLength(50)]
+        public string? LinkedIn { get; set; } = string.Empty;
+
+        public Guid? CompanyId { get; set; }
+    }
+}

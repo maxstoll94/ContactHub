@@ -1,7 +1,7 @@
-﻿using Contacter.Domain.Exceptions;
-using Contacter.Domain.SeedWork;
+﻿using ContactHub.Domain.ErrorHandling;
+using ContactHub.Domain.SeedWork;
 
-namespace Contacter.Domain.ValueObjects
+namespace ContactHub.Domain.ValueObjects
 {
     public class Name : ValueObject
     {
@@ -31,8 +31,8 @@ namespace Contacter.Domain.ValueObjects
             yield return Last;
         }
 
-        public override string ToString() 
-        { 
+        public override string ToString()
+        {
             return $"{First} {Last}";
         }
     }

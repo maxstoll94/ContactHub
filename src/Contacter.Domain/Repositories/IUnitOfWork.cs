@@ -1,4 +1,4 @@
-﻿namespace Contacter.Domain.Repositories
+﻿namespace ContactHub.Domain.Repositories
 {
     public interface IUnitOfWork
     {

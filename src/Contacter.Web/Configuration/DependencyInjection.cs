@@ -1,7 +1,4 @@
-﻿using Contacter.Domain.Repositories;
-using Contacter.Persistence;
-using Contacter.Persistence.Repositories;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
@@ -9,8 +6,11 @@ using Microsoft.Identity.Web.UI;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
+using ContactHub.Domain.Repositories;
+using ContactHub.Persistence.Repositories;
+using ContactHub.Persistence;
 
-namespace Contacter.Web.Configuration
+namespace ContactHub.Web.Configuration
 {
     public static class DependencyInjection
     {
@@ -19,7 +19,7 @@ namespace Contacter.Web.Configuration
             services.AddScoped<IContactRepository, ContactRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddDbContext<ContacterContext>(o => o.UseSqlServer(configuration.GetConnectionString("Database")));
+            services.AddDbContext<ContactHubContext>(o => o.UseSqlServer(configuration.GetConnectionString("ContactHubContext")));
             return services;
         }
 
@@ -32,9 +32,9 @@ namespace Contacter.Web.Configuration
         public static IServiceCollection AddPresentation(this IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddServerSideBlazor().AddMicrosoftIdentityConsentHandler();
+            services.AddServerSideBlazor();
 
-            services.AddControllersWithViews().AddMicrosoftIdentityUI();
+            services.AddControllersWithViews();
             services.AddBlazorise(options =>
                 {
                     options.Immediate = true;

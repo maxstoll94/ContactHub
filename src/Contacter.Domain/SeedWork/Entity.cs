@@ -1,4 +1,4 @@
-﻿namespace Contacter.Domain.Primitives
+﻿namespace ContactHub.Domain.SeedWork
 {
     public abstract class Entity : IEquatable<Entity>
     {

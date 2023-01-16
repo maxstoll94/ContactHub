@@ -1,10 +1,11 @@
-﻿using Contacter.Application.Abstractions.Messaging;
-using Contacter.Domain.Entities;
-using Contacter.Domain.Repositories;
-using Contacter.Domain.ValueObjects;
+﻿using ContactHub.Application.Abstractions.Messaging;
+using ContactHub.Domain.Entities;
+using ContactHub.Domain.ErrorHandling;
+using ContactHub.Domain.Repositories;
+using ContactHub.Domain.ValueObjects;
 using MediatR;
 
-namespace Contacter.Application.Commands.CreateContact;
+namespace ContactHub.Application.Commands.CreateContact;
 
 public class CreateContactCommand : ICommand
 {
@@ -23,11 +24,15 @@ public class CreateContactCommand : ICommand
 internal sealed class CreateContactCommandHandler : ICommandHandler<CreateContactCommand>
 {
     private readonly IContactRepository _contactRepository;
+    private readonly ICompanyRepository _companyRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateContactCommandHandler(IContactRepository contactRepository, IUnitOfWork unitOfWork)
+    public CreateContactCommandHandler(IContactRepository contactRepository,
+        ICompanyRepository companyRepository,
+        IUnitOfWork unitOfWork)
     {
         _contactRepository = contactRepository;
+        _companyRepository = companyRepository;
         _unitOfWork = unitOfWork;
     }
 
@@ -39,7 +44,14 @@ internal sealed class CreateContactCommandHandler : ICommandHandler<CreateContac
 
         if (request.CompanyId.HasValue)
         {
-            contact.ConnectCompany(request.CompanyId.Value);
+            var company = await _companyRepository.FindAsync(request.CompanyId.Value);
+
+            if (company == null)
+            {
+                throw new ContactorException("CompanyNotFound", $"A company with the identifier {request.CompanyId} does not exist", nameof(request.CompanyId));
+            }
+
+            contact.ConnectCompany(company);
         }
 
         _contactRepository.Add(contact);

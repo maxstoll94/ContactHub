@@ -1,0 +1,92 @@
+﻿@using ContactHub.Application.Commands.CreateCompany;
+@inject ISender _sender;
+
+
+<EditForm Model="@createRequest" OnValidSubmit="@HandleValidSubmit" class="form">
+    <Alert @ref="alert" Color="Color.Danger">
+        @message
+    </Alert>
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Name</label>
+        <InputText @bind-Value=createRequest.Name class="form-control" />
+        <ValidationMessage For="() => createRequest.Name" />
+    </div>
+    <Divider />
+    <div class="form-group">
+        <label>Street</label>
+        <InputText @bind-Value=createRequest.Street class="form-control" />
+        <ValidationMessage For=@(() => createRequest.Street) />
+    </div
+    <div class="form-group">
+        <label>Postal Code</label>
+        <InputText @bind-Value=createRequest.PostalCode class="form-control" />
+        <ValidationMessage For=@(() => createRequest.PostalCode) />
+    </div>
+        <div class="form-group">
+        <label>City</label>
+        <InputText @bind-Value=createRequest.City class="form-control" />
+        <ValidationMessage For=@(() => createRequest.City) />
+    </div>
+    <div class="form-group">
+        <label>Country</label>
+        <InputText @bind-Value=createRequest.Country class="form-control" />
+        <ValidationMessage For=@(() => createRequest.Country) />
+    </div>
+    <Button Type="ButtonType.Submit" Color="Color.Primary">Save Changes</Button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public EventCallback SubmitCallback { get; set; }
+
+    private CreateCompanyRequest createRequest { get; set; } = new CreateCompanyRequest();
+    private Alert? alert;
+    private string? message;
+
+    private async void HandleValidSubmit()
+    {
+        try
+        {
+            var command = new CreateCompanyCommand(createRequest.Name!, createRequest.Street!, createRequest.City!, createRequest.PostalCode!, createRequest.Country!);
+            await _sender.Send(command);
+
+            await SubmitCallback.InvokeAsync();
+        }
+        catch (ContactorException ex)
+        {
+            if (alert != null)
+            {
+                message = ex.Error.Message;
+                await alert.Show();
+            }
+        }
+        catch (Exception)
+        {
+            if (alert != null)
+            {
+                message = "An unexpected error has occured. Please try again!";
+                await alert.Show();
+            }
+        }
+    }
+
+    public class CreateCompanyRequest
+    {
+        [Required]
+        [StringLength(50)]
+        public string? Name { get; set; }
+
+        [StringLength(50)]
+        public string? Street { get; set; }
+
+        [StringLength(50)]
+        public string? City { get; set; }
+
+        [StringLength(50)]
+        public string? PostalCode { get; set; }
+
+        [StringLength(50)]
+        public string? Country { get; set; }
+    }
+}

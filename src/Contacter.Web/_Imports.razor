@@ -6,7 +6,15 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using Microsoft.JSInterop
-@using Contacter.Web
-@using Contacter.Web.Shared
+@using ContactHub.Web
+@using ContactHub.Web.Shared
 @using MediatR
 @using Blazorise
+@using ContactHub.Application.Commands.UpdateContact;
+@using ContactHub.Application.Queries.GetContacts;
+@using ContactHub.Domain.ErrorHandling;
+@using ContactHub.Domain.ValueObjects;
+@using System.ComponentModel.DataAnnotations;
+@using ContactHub.Application.Commands.CreateContact;
+@using ContactHub.Application.Queries.GetCompanies;
+@using ContactHub.Web.Components.Company

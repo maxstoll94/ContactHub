@@ -1,6 +1,6 @@
-﻿using Contacter.Domain.Entities;
+﻿using ContactHub.Domain.Entities;
 
-namespace Contacter.Domain.Repositories
+namespace ContactHub.Domain.Repositories
 {
     public interface ICompanyRepository
     {

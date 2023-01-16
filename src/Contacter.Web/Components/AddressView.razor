@@ -1,0 +1,14 @@
+﻿@using ContactHub.Application.Queries.GetCompanies;
+
+<ul class="list-group">
+    <li class="list-group-item">@Address?.Street</li>
+    <li class="list-group-item">@Address?.PostalCode</li>
+    <li class="list-group-item">@Address?.City</li>
+    <li class="list-group-item">@Address?.Country</li>
+</ul>
+
+@code {
+
+    [Parameter]
+    public Domain.ValueObjects.Address? Address { get; set; }
+}

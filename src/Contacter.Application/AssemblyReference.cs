@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Contacter.Application;
+namespace ContactHub.Application;
 
 public static class AssemblyReference
 {
