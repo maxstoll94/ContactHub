@@ -23,9 +23,3 @@ This project is publically hosted on Azure:
 ![image](https://user-images.githubusercontent.com/14106031/212625441-f68c6d42-7de1-432a-8d09-a535d7bab6db.png)
 
 You can access it via the following URL: https://contacthub-web.azurewebsites.net
-A test user has been created with the following credentials for you to login:
-
-```
-username: testuser@maxstoll94yahoo.onmicrosoft.com
-password: ContactHub2023!
-```
